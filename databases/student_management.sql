@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 05, 2020 at 04:50 PM
+-- Generation Time: May 05, 2020 at 05:27 PM
 -- Server version: 5.7.30-0ubuntu0.16.04.1
 -- PHP Version: 7.2.21-1+ubuntu16.04.1+deb.sury.org+1
 
@@ -33,6 +33,14 @@ CREATE TABLE `class` (
   `name` varchar(255) CHARACTER SET latin1 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `class`
+--
+
+INSERT INTO `class` (`id`, `name`) VALUES
+(1, '11A1'),
+(2, '11A2');
+
 -- --------------------------------------------------------
 
 --
@@ -47,6 +55,14 @@ CREATE TABLE `students` (
   `birthday` varchar(255) CHARACTER SET latin1 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`id`, `id_class`, `name`, `sex`, `birthday`) VALUES
+(1, 1, 'Quan', 'Nam', '19-08-1995'),
+(2, 2, 'Vinh', 'Nu', '01-12-1999');
+
 -- --------------------------------------------------------
 
 --
@@ -58,6 +74,18 @@ CREATE TABLE `student_subjects` (
   `id_subject` int(11) NOT NULL,
   `score` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `student_subjects`
+--
+
+INSERT INTO `student_subjects` (`id_student`, `id_subject`, `score`) VALUES
+(1, 1, 9),
+(1, 2, 5),
+(1, 3, 7),
+(2, 1, 7),
+(2, 2, 10),
+(2, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -71,6 +99,15 @@ CREATE TABLE `subjects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `name`) VALUES
+(1, 'Toan'),
+(2, 'Ly'),
+(3, 'Hoa');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -78,13 +115,15 @@ CREATE TABLE `subjects` (
 -- Indexes for table `class`
 --
 ALTER TABLE `class`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
   ADD KEY `id_class` (`id_class`);
 
 --
@@ -98,7 +137,8 @@ ALTER TABLE `student_subjects`
 -- Indexes for table `subjects`
 --
 ALTER TABLE `subjects`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -108,17 +148,17 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- Constraints for dumped tables
 --
