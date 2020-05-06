@@ -15,7 +15,7 @@
     </head>
     <body>
         <h1>List Students</h1>
-        <a href="#">Add student</a> <br/> <br/>
+        <a href="add.php">Add student</a> <br/> <br/>
         <table class="table table-border">
             <tr class="table-title">
                 <td class="table-border">ID</td>

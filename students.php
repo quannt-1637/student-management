@@ -10,7 +10,8 @@ function connectDatabase()
 
     // Neu chua ket noi thi thuc hien ket noi
     if (!$conn) {
-        $conn = mysqli_connect('localhost', 'root', '123456', 'student_management') or die('Can\'t not connect to database');
+        $conn = mysqli_connect('localhost', 'root', '123456', 'student_management')
+                    or die('Can\'t not connect to database');
         mysqli_set_charset($conn, 'utf8');
     }
 }
@@ -67,4 +68,63 @@ function getAllStudents()
     }
 
     return $newArray;
+}
+
+function getMasterData($table)
+{
+    global $conn;
+    $result = [];
+
+    connectDatabase();
+
+    $sql = 'SELECT * FROM ' . $table;
+
+    // Thuc hien cau truy van
+    $query = mysqli_query($conn, $sql);
+
+    // Lay tung ban ghi va dua vao bien result[]
+    if ($query) {
+        while ($row = mysqli_fetch_assoc($query)) {
+            $result[] = $row;
+        }
+    }
+
+    return $result;
+}
+
+function insertScoreStudent($studentName, $masterDataSubjects, $score)
+{
+    global $conn;
+
+    connectDatabase();
+
+    foreach ($masterDataSubjects as $key => $value) {
+        $sql = "INSERT INTO student_subjects(id_student, id_subject, score)
+                    SELECT students.id, subjects.id, {$score[$key]}
+                    FROM students, subjects
+                    WHERE students.name='{$studentName}' AND subjects.name='{$value['name']}'";
+        mysqli_query($conn, $sql);
+    }
+}
+
+function addStudent($name, $sex, $birthday, $class, $subjects)
+{
+    global $conn;
+
+    connectDatabase();
+
+    // Chong SQL Injection
+    $studentName = addslashes($name);
+    $studentSex = addslashes($sex);
+    $studentBirthday = addslashes($birthday);
+    $class = addslashes($class);
+
+    $sql = "INSERT INTO students(id_class, name, sex, birthday)
+                VALUES ('$class', '$studentName', '$studentSex', '$studentBirthday')";
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $masterDataSubjects = getMasterData('subjects');
+        insertScoreStudent($studentName, $masterDataSubjects, $subjects);
+    }
 }
