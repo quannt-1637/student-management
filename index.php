@@ -23,6 +23,7 @@
                 <td class="table-border">Class</td>
                 <td class="table-border">Gender</td>
                 <td class="table-border">Birthday</td>
+                <td class="table-border">Score</td>
                 <td class="table-border">Options</td>
             </tr>
             <?php foreach ($students as $item) { ?>
@@ -32,6 +33,11 @@
                     <td class="table-border"><?php echo $item['class_name']; ?></td>
                     <td class="table-border"><?php echo $item['sex']; ?></td>
                     <td class="table-border"><?php echo $item['birthday']; ?></td>
+                    <td class="table-border">
+                        <?php foreach ($item['subjects'] as $subject) {
+                            echo $subject['subject_name'] . ': ' . $subject['score'] . '<br/>';
+                        } ?>
+                    </td>
                     <td class="table-border">
                         <form method="POST" action="#">
                             <input type="button" value="Edit"/>
