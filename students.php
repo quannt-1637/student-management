@@ -32,14 +32,21 @@ function getAllStudents()
     // Goi toi bien toan cuc $conn
     global $conn;
 
+    $result = [];
+    $newArray = [];
+    $counter=0;
+
     connectDatabase();
 
-    $sql = 'SELECT students.*, class.name as class_name FROM students INNER JOIN class ON students.id_class = class.id';
+    $sql = 'SELECT students.*, class.name AS class_name, subjects.name AS subject_name, student_subjects.score
+                FROM students 
+                INNER JOIN student_subjects ON student_subjects.id_student = students.id
+                INNER JOIN subjects ON subjects.id = student_subjects.id_subject
+                INNER JOIN class ON students.id_class = class.id';
 
     // Thuc hien cau truy van
     $query = mysqli_query($conn, $sql);
 
-    $result = [];
     // Lay tung ban ghi va dua vao bien result[]
     if ($query) {
         while ($row = mysqli_fetch_assoc($query)) {
@@ -47,5 +54,17 @@ function getAllStudents()
         }
     }
 
-    return $result;
+    foreach ($result as $key => $val) {
+        $newArray[$val['id']]['id'] = $val['id'];
+        $newArray[$val['id']]['name'] = $val['name'];
+        $newArray[$val['id']]['id_class'] = $val['id_class'];
+        $newArray[$val['id']]['sex'] = $val['sex'];
+        $newArray[$val['id']]['birthday'] = $val['birthday'];
+        $newArray[$val['id']]['class_name'] = $val['class_name'];
+        $newArray[$val['id']]['subjects'][$counter]['subject_name'] = $val['subject_name'];
+        $newArray[$val['id']]['subjects'][$counter]['score'] = $val['score'];
+        $counter++;
+    }
+
+    return $newArray;
 }
