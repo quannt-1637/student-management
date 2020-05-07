@@ -4,7 +4,18 @@ require './students.php';
 
 $classes = getMasterData('class');
 
-if (!empty($_POST['add_student'])) {
+$id = isset($_GET['id']) ? (int)$_GET['id'] : '';
+
+if ($id) {
+    $data = getStudent($id);
+}
+
+if (!$data) {
+    header('location: index.php');
+}
+
+if (!empty($_POST['edit_student'])) {
+    $data['id'] = isset($_POST['id']) ? $_POST['id'] : '';
     $data['name'] = isset($_POST['name']) ? $_POST['name'] : '';
     $data['class'] = isset($_POST['class']) ? $_POST['class'] : '';
     $data['sex'] = isset($_POST['sex']) ? $_POST['sex'] : '';
@@ -43,8 +54,10 @@ if (!empty($_POST['add_student'])) {
         $errors['subject_chemistry'] = 'Score chemistry required';
     }
 
+    // Neu ko co loi thi insert
     if (!$errors) {
-        addStudent(
+        editStudent(
+            $data['id'],
             $data['name'],
             $data['sex'],
             $data['birthday'],
@@ -62,23 +75,21 @@ disconnectDatabase();
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Add Student</title>
+        <title>Edit Student</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./resources/css/index.css">
     </head>
-
     <body>
-        <h1>Add Student</h1>
+        <h1>Edit Student</h1>
         <a href="index.php">Back</a>
         <br/><br/>
-        <form method="POST" action="add.php">
+        <form method="post" action="edit.php?id=<?php echo $data['id']; ?>">
             <table class="table table-border width-table">
                 <tr>
                     <td class="table-border">Name</td>
                     <td class="table-border">
-                        <input type="text" name="name"
-                               value="<?php echo !empty($data['name']) ? $data['name'] : ''; ?>"/>
+                        <input type="text" name="name" value="<?php echo $data['name']; ?>"/>
                         <?php if (!empty($errors['student_name'])) {
                             echo '<p class="color-error">' . $errors['student_name'] . '</p>';
                         } ?>
@@ -91,7 +102,11 @@ disconnectDatabase();
                         <select name="class">
                             <?php
                             foreach ($classes as $val) {
-                                echo '<option value="' . $val['id'] . '">' . $val['name'] . '</option>';
+                                if ($data['class_name'] === $val['name']) {
+                                    echo '<option value="' . $val['id'] . '" selected>' . $val['name'] . '</option>';
+                                } else {
+                                    echo '<option value="' . $val['id'] . '">' . $val['name'] . '</option>';
+                                }
                             }
                             ?>
                         </select>
@@ -103,18 +118,23 @@ disconnectDatabase();
                     <td class="table-border">
                         <select name="sex">
                             <option value="Nam">Nam</option>
-                            <option value="Nu">Nu</option>
+                            <option value="Nu"
+                                <?php if ($data['sex'] === 'Nu') {
+                                    echo 'selected';
+                                } ?>
+                            >Nu</option>
                         </select>
                         <?php if (!empty($errors['student_sex'])) {
                             echo '<p class="color-error">'. $errors['student_sex'] . '</p>';
                         } ?>
                     </td>
                 </tr>
+
                 <tr>
                     <td class="table-border">Birthday</td>
                     <td class="table-border">
                         <input type="text" name="birthday"
-                               value="<?php echo !empty($data['birthday']) ? $data['birthday'] : ''; ?>"/>
+                               value="<?php echo $data['birthday']; ?>"/>
                         <?php if (!empty($errors['student_birthday'])) {
                             echo '<p class="color-error">' . $errors['student_birthday'] . '</p>';
                         } ?>
@@ -124,41 +144,21 @@ disconnectDatabase();
                 <tr>
                     <td class="table-border">Score</td>
                     <td class="table-border">
-                        <p>
-                            <label>Math: </label>
-                            <input type="text" name="subject_math"
-                                   value="<?php echo !empty($data['subject_math']) ? $data['subject_math'] : ''; ?>"/>
-                            <?php if (!empty($errors['subject_math'])) {
-                                echo '<p class="color-error">' . $errors['subject_math'] . '</p>';
-                            } ?>
-                        </p>
-                        <p>
-                            <label>Physics: </label>
-                            <input type="text" name="subject_physics"
-                                   value="<?php
-                                    echo !empty($data['subject_physics']) ? $data['subject_physics'] : '';
-                                    ?>"/>
-                            <?php if (!empty($errors['subject_physics'])) {
-                                echo '<p class="color-error">' . $errors['subject_physics'] . '</p>';
-                            } ?>
-                        </p>
-                        <p>
-                            <label>Chemistry: </label>
-                            <input type="text" name="subject_chemistry"
-                                   value="<?php
-                                    echo !empty($data['subject_chemistry']) ? $data['subject_chemistry'] : '';
-                                    ?>"/>
-                            <?php if (!empty($errors['subject_chemistry'])) {
-                                echo '<p class="color-error">' . $errors['subject_chemistry'] . '</p>';
-                            } ?>
-                        </p>
+                        <?php
+                        foreach ($data['subjects'] as $key => $value) {
+                            echo '<p><label>' . $value['subject_name'] . ': </label>'
+                                . '<input type="text" name="subject_' . strtolower($value['subject_name']) . '"'
+                                . 'value="' . $value['score'] . '"/>';
+                        }
+                        ?>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="table-border"></td>
                     <td class="table-border">
-                        <input type="submit" name="add_student" value="Save"/>
+                        <input type="hidden" name="id" value="<?php echo $data['id']; ?>"/>
+                        <input type="submit" name="edit_student" value="Save"/>
                     </td>
                 </tr>
             </table>
