@@ -40,7 +40,8 @@
                     </td>
                     <td class="table-border">
                         <form method="POST" action="#">
-                            <input type="button" value="Edit"/>
+                            <input onclick="window.location = 'edit.php?id=<?php echo $item['id']; ?>'"
+                                   type="button" value="Edit"/>
                             <input type="hidden" name="id" value=""/>
                             <input type="submit" name="delete" value="Delete"/>
                         </form>
