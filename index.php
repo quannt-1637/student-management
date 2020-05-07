@@ -39,11 +39,12 @@
                         } ?>
                     </td>
                     <td class="table-border">
-                        <form method="POST" action="#">
+                        <form method="POST" action="delete.php">
                             <input onclick="window.location = 'edit.php?id=<?php echo $item['id']; ?>'"
                                    type="button" value="Edit"/>
-                            <input type="hidden" name="id" value=""/>
-                            <input type="submit" name="delete" value="Delete"/>
+                            <input type="hidden" name="id" value="<?php echo $item['id']; ?>"/>
+                            <input onclick="return confirm('Are you sure you want to delete');"
+                                   type="submit" name="delete" value="Delete"/>
                         </form>
                     </td>
                 </tr>
