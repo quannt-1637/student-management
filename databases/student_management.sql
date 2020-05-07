@@ -9,6 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+SET FOREIGN_KEY_CHECKS=1;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -103,9 +104,9 @@ CREATE TABLE `subjects` (
 --
 
 INSERT INTO `subjects` (`id`, `name`) VALUES
-(1, 'Toan'),
-(2, 'Ly'),
-(3, 'Hoa');
+(1, 'Math'),
+(2, 'Physics'),
+(3, 'Chemistry');
 
 --
 -- Indexes for dumped tables
@@ -167,8 +168,8 @@ ALTER TABLE `subjects`
 -- Constraints for table `student_subjects`
 --
 ALTER TABLE `student_subjects`
-  ADD CONSTRAINT `student_subjects_ibfk_1` FOREIGN KEY (`id_subject`) REFERENCES `subjects` (`id`),
-  ADD CONSTRAINT `student_subjects_ibfk_2` FOREIGN KEY (`id_student`) REFERENCES `students` (`id`);
+  ADD CONSTRAINT `student_subjects_ibfk_1` FOREIGN KEY (`id_subject`) REFERENCES `subjects` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_subjects_ibfk_2` FOREIGN KEY (`id_student`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

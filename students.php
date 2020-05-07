@@ -193,8 +193,11 @@ function editStudent($id, $name, $sex, $birthday, $class, $subjects)
     $studentBirthday = addslashes($birthday);
     $class = addslashes($class);
 
-    $sql = "UPDATE students SET id_class = {$class}, name = '$studentName',
-                sex = '$studentSex', birthday = '$studentBirthday'
+    $sql = "UPDATE students SET
+                id_class = {$class},
+                name = '$studentName',
+                sex = '$studentSex',
+                birthday = '$studentBirthday'
                 WHERE id = {$id}";
     $query = mysqli_query($conn, $sql);
 
@@ -204,4 +207,18 @@ function editStudent($id, $name, $sex, $birthday, $class, $subjects)
     }
 
     return $query;
+}
+
+function deleteStudent($id)
+{
+    global $conn;
+
+    connectDatabase();
+
+    $sql = "DELETE students, student_subjects
+            FROM students
+            INNER JOIN student_subjects ON students.id = student_subjects.id_student
+            WHERE students.id = $id";
+
+    return mysqli_query($conn, $sql);
 }
