@@ -1,32 +1,6 @@
 <?php
-// Bien ket noi toan cuc
-global $conn;
 
-// Ham ket noi database
-function connectDatabase()
-{
-    // Goi toi bien toan cuc $conn
-    global $conn;
-
-    // Neu chua ket noi thi thuc hien ket noi
-    if (!$conn) {
-        $conn = mysqli_connect('localhost', 'root', '123456', 'student_management')
-                    or die('Can\'t not connect to database');
-        mysqli_set_charset($conn, 'utf8');
-    }
-}
- 
-// Ham ngat ket noi
-function disconnectDatabase()
-{
-    // Goi toi bien toan cuc $conn
-    global $conn;
-     
-    // Neu da ket noi thi thuc hien ngat ket noi
-    if ($conn) {
-        mysqli_close($conn);
-    }
-}
+require 'database.php';
 
 function getAllStudents()
 {
