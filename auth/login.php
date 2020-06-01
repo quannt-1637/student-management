@@ -5,11 +5,14 @@ require './handle_auth.php';
 session_start();
 if (isset($_SESSION['email']) && $_SESSION['email']) {
     header('location: ../index.php');
+} elseif (isset($_COOKIE['remember']) && $_COOKIE['remember']) {
+    checkRemember($_COOKIE['remember']);
 }
 
 if (!empty($_POST['login'])) {
     $data['password'] = isset($_POST['password']) ? $_POST['password'] : '';
     $data['email'] = isset($_POST['email']) ? $_POST['email'] : '';
+    $data['remember_me'] = isset($_POST['remember_me']) ? (int)$_POST['remember_me'] : 0;
 
     // Validate
     $errors = [];
@@ -24,7 +27,8 @@ if (!empty($_POST['login'])) {
     if (!$errors) {
         login(
             $data['email'],
-            $data['password']
+            $data['password'],
+            $data['remember_me']
         );
     }
     disconnectDatabase();
@@ -62,6 +66,13 @@ if (!empty($_POST['login'])) {
                         <?php if (!empty($errors['password'])) {
                             echo '<p class="color-error">' . $errors['password'] . '</p>';
                         } ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-border">Remember me</td>
+                    <td class="table-border">
+                        <input type="checkbox" name="remember_me" value="1" />
                     </td>
                 </tr>
             </table>
